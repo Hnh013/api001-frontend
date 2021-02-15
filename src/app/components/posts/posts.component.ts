@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Item } from '../../models/Item';
 import { DataService } from '../../services/data.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-posts',
@@ -10,20 +11,39 @@ import { DataService } from '../../services/data.service';
 export class PostsComponent implements OnInit {
   
   itemSearch: string = '';
-
+  loggedId : string = '0';
+  listsList: any[];
   itemList: Item[];
+  itemsList: any[];
   item : string; 
+  Shopping_List: string = '';
+  Shopping_List_Id: string = '';
+  item_desc : string = '';
 
-  constructor( private dataservice : DataService ) { }
+  constructor( private dataservice : DataService,
+               private authservice : AuthService
+     ) { }
 
   ngOnInit(): void {
-     this.refreshItemList()
+    this.getUserId();
+     this.refreshItemList();
+     this.refreshUserLists();
+     this.viewContents(this.Shopping_List_Id);
+    
   }
 
   refreshItemList() {
     this.dataservice.getAllItems().subscribe(data=>{
 
       this.itemList=data;
+    });
+  }
+
+  refreshUserLists() {
+    this.dataservice.getAllLists(localStorage.getItem("userId")).subscribe(data=>{
+      
+      this.listsList=data;
+
     });
   }
 
@@ -81,6 +101,75 @@ export class PostsComponent implements OnInit {
 
     
   }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  getUserId() {
+    this.loggedId = (localStorage.getItem("userId"));
+  }
+  
+
+  viewContents(id) {
+
+    this.dataservice.getListItems(id).subscribe(data => {
+      this.itemsList = data;
+  
+    });
+
+  }
+
+  setCurrentList(l) {
+  
+    this.Shopping_List = l.name;
+      this.Shopping_List_Id = l.id;
+      
+    
+
+  }
+
+   addItem() {
+    var item = {
+      list_id : this.Shopping_List_Id,
+      item_desc : this.item_desc,
+     };
+
+   
+
+    this.dataservice.createItem(item).subscribe(res=>{
+      
+      //console.log(res);
+      
+      alert("Item added to the List");
+      this.refreshItemList();
+      });
+    
+
+    
+  }
+
+  updateItem(i) {
+    var item = {
+       id : i.id,
+      list_id : i.list_id,
+      item_desc : i.item_desc,
+     };
+
+   
+
+    this.dataservice.changeItem(item).subscribe(res=>{
+      
+      //console.log(res);
+      
+      alert("Item added to the List");
+      this.viewContents(i.list_id);
+      });
+    
+
+    
+  }
+
+
+  
+
+
 
 
 }

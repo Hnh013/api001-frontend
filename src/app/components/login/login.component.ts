@@ -30,16 +30,15 @@ export class LoginComponent implements OnInit {
   login(): void {
     this.authService
     .login(this.loginForm.value.email, this.loginForm.value.password)
-    .subscribe(res => {
-    
-      alert(["You have been logged in!"]);  
-     console.log(res);
-    });
+    .subscribe();
+
+    //console.log(localStorage.getItem("token"));
+
   }
   
   logout() {
-    localStorage.removeItem('currentUser');
-
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
     alert("You have logged Out!");
   }
 

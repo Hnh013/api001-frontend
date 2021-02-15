@@ -1,12 +1,16 @@
-<mat-toolbar color="primary">CRUD Operations</mat-toolbar>
+<!-- <mat-toolbar color="primary">CRUD Operations</mat-toolbar>
 <h1 style="text-align: center; font-size: 48px; font-weight: bold; margin-top: 100px;">Shopping List</h1>
 <mat-card style="width: 50%; margin: auto;">
 <button 
 (click)="createItem()" mat-fab color="primary" style="float: right;">
 <mat-icon>add</mat-icon>
-</button>
+</button> -->
 
 
+<h1>{{ loggedId }}</h1>
+
+
+<!-- 
 <mat-form-field style="width: 100%;">
 <mat-label>Grocery Item</mat-label>
 <input [(ngModel)]="item" matInput placeholder="Ex. Rice" />
@@ -17,12 +21,12 @@
     <mat-label>Search an Item</mat-label>
     <input [(ngModel)]="itemSearch" matInput placeholder="Write name to search
     " />
-    </mat-form-field>
+    </mat-form-field> -->
 
 
-
+  <!--
 <mat-list>
-    <mat-list-item *ngFor="let i of itemList | filter : itemSearch ">
+   <mat-list-item *ngFor="let i of itemList | filter : itemSearch ">
         <span style="font-weight: bold;">
         {{i.id}}&nbsp;&nbsp;{{i.item}}
         </span>
@@ -39,6 +43,126 @@
             </button>
         </span>
     </mat-list-item>
-</mat-list>
+</mat-list> 
    
 </mat-card>
+-->
+
+
+<mat-card style="width: 60%; float: left;">
+    
+<mat-list>
+    <mat-label>
+        
+
+        <button mat-mini-fab color="primary" aria-label="Example icon button with a menu icon">
+            <mat-icon>menu</mat-icon>
+          </button>
+    
+        
+          
+        
+       
+          <button mat-mini-fab color="warn" aria-label="Example icon button with a filter list icon">
+            <mat-icon>filter_list</mat-icon>
+          </button>
+        
+    
+            <button mat-mini-fab disabled aria-label="Example icon button with a home icon">
+            <mat-icon>home</mat-icon>
+            </button>
+
+            
+              <button mat-fab color="accent" aria-label="Example icon button with a bookmark icon">
+                <mat-icon>bookmark</mat-icon>
+              </button>
+            
+              <button mat-fab color="warn" aria-label="Example icon button with a home icon">
+                <mat-icon>home</mat-icon>
+              </button>
+            
+              <button mat-fab disabled aria-label="Example icon button with a heart icon">
+                <mat-icon>favorite</mat-icon>
+              </button>
+              
+    </mat-label>
+
+
+    <mat-list-item *ngFor="let l of listsList">
+        <div class="list-info">
+            <span style="font-weight: bold;">{{l.id}}</span>
+        </div>
+        
+        
+        <!-- <span style="font-weight: bold;">{{l.user_id}}</span> -->
+        <div class="list-info">
+          
+            <span style="font-weight: bold;">{{l.name}}</span>
+        </div>
+      
+        <!-- <span style="font-weight: bold;">{{l.updated_date}}</span> --->
+        <div  class="list-info">
+            <span style="font-weight: bold;">{{l.status}}</span> 
+        </div>
+       
+        <div  class="list-options">
+            <button mat-raised-button color="accent" (click)="viewContents(l.id);setCurrentList(l)">View</button>
+            &nbsp; &nbsp;
+        <button mat-raised-button color="primary">Edit</button>
+        &nbsp; &nbsp;
+        <button mat-raised-button color="warn">Delete</button>
+        </div>
+    </mat-list-item>
+</mat-list>
+</mat-card>
+
+
+
+<mat-card style="width: 30%; float: right;">
+    <h1
+  style="
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 30px;
+  "
+>
+{{ Shopping_List }}
+<input [(ngModel)]="Shopping_List_Id" type="hidden" /> 
+</h1>
+
+    <button mat-fab color="primary" (click)="addItem()" style="float: right;">
+    <mat-icon>add</mat-icon>
+    </button> 
+
+    <mat-form-field style="width: 100%;">
+        <mat-label>Item</mat-label>
+        <input [(ngModel)]="item_desc" matInput placeholder="Ex. Rice" />
+        </mat-form-field>
+
+    
+    
+    <mat-list>
+    <mat-list-item *ngFor="let i of itemsList">
+        <span style="font-weight: bold;">
+            {{i.id}} &nbsp; &nbsp; {{i.item_desc}} 
+        </span>
+        
+         
+            
+      
+            <span style="position: absolute; right: 0;">
+
+              <button mat-fab color="accent" (click)="editItem(i)">
+                <mat-icon>Edit</mat-icon>
+              </button>
+            <button mat-fab color="primary" aria-label="Example icon button with a delete icon">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </span>
+        
+    </mat-list-item>
+    
+    </mat-list>
+</mat-card>
+

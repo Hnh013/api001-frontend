@@ -1,0 +1,36 @@
+.example-card {
+    max-width: 900px;
+    float: left;
+  }
+
+  .example-card2 {
+    max-width: 800px;
+    float:right;
+  }
+
+  .item-option {
+      float: right;
+      margin-right: 50px;
+      margin-left: auto;
+      
+      //margin-left: 100px;
+  }
+
+  .item {
+      float: left;
+      margin-right: 80px;
+      margin-left: 20px;
+      padding: auto;
+  }
+
+  .list-info {
+    float: center;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+.list-option {
+  float: right;
+  margin-left: 50px;
+  margin-right: 50px;
+}

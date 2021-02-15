@@ -24,9 +24,11 @@ export class NavigationComponent implements OnInit {
     }
   }
 
-  checkuser() {
-    const cu = localStorage.getItem('currentUser');
-    console.log(cu);
-  }
+   checktoken() {
+     const t = localStorage.getItem("token");
+     const u = localStorage.getItem("userId");
+     console.log(t);
+     console.log(u);
+   }
 
 }
