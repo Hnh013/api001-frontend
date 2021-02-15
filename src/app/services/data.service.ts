@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Item } from '../models/Item';
 import { Observable } from 'rxjs';
+import { List } from '../models/list';
+
 
 @Injectable({
   providedIn: 'root'
@@ -12,55 +14,39 @@ export class DataService {
 
   private APIurl = "http://localhost:3000";
 
-  getAllItems():Observable<Item[]> {
-    return this.http.get<Item[]>(this.APIurl + '/gro/');
-  }
-
-  deleteItem(val:any) {
-    debugger;
-    //return this.http.delete(`${this.APIurl}/delete/${id}`);
-      return this.http.delete(this.APIurl + '/gro/'+val); 
-  }
-
-  updateItem(item : Item): Observable<Item> { 
-    return this.http.put<Item>(this.APIurl + '/gro/', item);
-  }
-
-  addItem(item : any) {
- 
-    return this.http.post<any>(this.APIurl + '/gro/', item);
-   
-  }
-
-  ////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  getAllLists(id:any):Observable<any[]> {
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////// MANIPULATING LISTS //////////////////////////////////////////////
   
-    return this.http.get<any[]>(this.APIurl + '/list/' + id);
-    
+  fetchAllLists(user_id : any):Observable<List[]> {
+    return this.http.get<List[]>(this.APIurl + '/list/al/' + user_id);
+  }
+  
+  createList(list : any) {
+    return this.http.post<any>(this.APIurl + '/list/', list);
+  }
+   
+  editList(list : any) : Observable<List> { 
+    return this.http.put<any>(this.APIurl + '/list/', list);
   }
 
-
-
- 
-
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   getListItems(id : any): Observable<any[]> { 
-     debugger;
-     return this.http.get<any[]>(this.APIurl + '/item/' + id);
-     debugger;
-   }
-
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////// MANIPULATING ITEMS  //////////////////////////////////////////////
+  
+  fetchAllItems(id : any):Observable<Item[]> {
+    return this.http.get<Item[]>(this.APIurl + '/item/' + id);
+  }
+  
   createItem(item : any) {
- 
     return this.http.post<any>(this.APIurl + '/item/add/', item);
-   
   }
    
-  changeItem(item : any) : Observable<any> { 
+  editItem(item : any) : Observable<Item> { 
     return this.http.put<any>(this.APIurl + '/item/edit/', item);
   }
+  deleteItem(id : any) {
+    return this.http.delete(this.APIurl + '/item/delete/' + id);
+  }
 
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

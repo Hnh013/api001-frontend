@@ -1,5 +1,5 @@
 export interface Item {
-    id: number;
-    item: string;
-
+    id : number;
+    list_id : number;
+    item_desc : string;
 }

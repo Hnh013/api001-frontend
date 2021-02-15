@@ -7,7 +7,9 @@
 </button> -->
 
 
-<h1>{{ loggedId }}</h1>
+<h1>{{ loggedUserId }}</h1>
+
+
 
 
 <!-- 
@@ -50,68 +52,65 @@
 
 
 <mat-card style="width: 60%; float: left;">
-    
+
+  <button 
+  mat-fab color="primary" style="float: right;" (click)="addUserList()">
+ <mat-icon>add</mat-icon>
+ </button>
+      
+ <mat-form-field style="width: 100%;">
+  <mat-label>Create A New List Here</mat-label>
+  <input [(ngModel)]="listName" matInput placeholder="Ex. MyListOne" />
+  </mat-form-field>
+  
+  
+ 
+
 <mat-list>
     <mat-label>
         
-
-        <button mat-mini-fab color="primary" aria-label="Example icon button with a menu icon">
-            <mat-icon>menu</mat-icon>
-          </button>
+      <mat-form-field style="width: 100%;">
+        <mat-label>Write New Name of List Here , then click on 'Rename'</mat-label>
+        <input [(ngModel)]="listRename" matInput placeholder="Ex. MyListOne" style="float: left;" /> 
+        </mat-form-field>
+   
     
-        
-          
         
        
-          <button mat-mini-fab color="warn" aria-label="Example icon button with a filter list icon">
-            <mat-icon>filter_list</mat-icon>
-          </button>
         
-    
-            <button mat-mini-fab disabled aria-label="Example icon button with a home icon">
-            <mat-icon>home</mat-icon>
-            </button>
-
-            
-              <button mat-fab color="accent" aria-label="Example icon button with a bookmark icon">
-                <mat-icon>bookmark</mat-icon>
-              </button>
-            
-              <button mat-fab color="warn" aria-label="Example icon button with a home icon">
-                <mat-icon>home</mat-icon>
-              </button>
-            
-              <button mat-fab disabled aria-label="Example icon button with a heart icon">
-                <mat-icon>favorite</mat-icon>
-              </button>
               
     </mat-label>
 
 
-    <mat-list-item *ngFor="let l of listsList">
-        <div class="list-info">
-            <span style="font-weight: bold;">{{l.id}}</span>
-        </div>
+    <mat-list-item *ngFor="let l of userLists">
+  
         
-        
+      
         <!-- <span style="font-weight: bold;">{{l.user_id}}</span> -->
-        <div class="list-info">
-          
-            <span style="font-weight: bold;">{{l.name}}</span>
+        <div class="list-info" style="float: left;">  
+        <span style="font-weight: bold;">
+          {{l.name}}
+        </span>
         </div>
       
         <!-- <span style="font-weight: bold;">{{l.updated_date}}</span> --->
-        <div  class="list-info">
+        <!-- <div  class="list-info">
             <span style="font-weight: bold;">{{l.status}}</span> 
-        </div>
+        </div> -->
        
-        <div  class="list-options">
-            <button mat-raised-button color="accent" (click)="viewContents(l.id);setCurrentList(l)">View</button>
-            &nbsp; &nbsp;
-        <button mat-raised-button color="primary">Edit</button>
-        &nbsp; &nbsp;
-        <button mat-raised-button color="warn">Delete</button>
-        </div>
+        <span style="position: absolute; right: 0;">
+         
+            &nbsp;
+            <button mat-raised-button color="primary" style="float: inline-start;" (click)="renameList(l)">Rename </button> 
+           &nbsp;
+            <button mat-raised-button color="accent" (click)="refreshListItems(l)" >View</button>
+           &nbsp;
+            <!-- <button mat-raised-button color="primary">Edit</button>
+            &nbsp; &nbsp; -->
+            <button mat-raised-button color="warn" (click)="deleteList(l)" >Delete</button>
+        </span>
+      
+       
     </mat-list-item>
 </mat-list>
 </mat-card>
@@ -119,45 +118,54 @@
 
 
 <mat-card style="width: 30%; float: right;">
-    <h1
-  style="
-    text-align: center;
-    font-size: 28px;
-    font-weight: bold;
-    margin-top: 30px;
-  "
->
-{{ Shopping_List }}
-<input [(ngModel)]="Shopping_List_Id" type="hidden" /> 
-</h1>
+    <h1 style="text-align: center; font-size: 28px; font-weight: bold; margin-top: 30px;">
+    {{ selectedList }}
+    <input value="{{selectedListId}}" type="hidden"/>
+    </h1>
 
-    <button mat-fab color="primary" (click)="addItem()" style="float: right;">
-    <mat-icon>add</mat-icon>
-    </button> 
+
+   
+    
+   
+
+    <button (click)="addListItem()"
+    mat-fab color="primary" style="float: right;">
+   <mat-icon>add</mat-icon>
+   </button>
+        
+   <mat-form-field style="width: 80%;">
+    <mat-label>Add An Item Here</mat-label>
+    <input [(ngModel)]="itemDesc" matInput placeholder="Ex. Bread" />
+    </mat-form-field>
 
     <mat-form-field style="width: 100%;">
+      <mat-label>Write Edited Description Here , then click on 'Edit'</mat-label>
+      <input [(ngModel)]="itemDescEdit" matInput placeholder="Ex. Something" style="float: left;" /> 
+      </mat-form-field>
+
+    <!-- <mat-form-
+      
+      field style="width: 100%;">
         <mat-label>Item</mat-label>
         <input [(ngModel)]="item_desc" matInput placeholder="Ex. Rice" />
-        </mat-form-field>
+        </mat-form-field> -->
 
     
     
     <mat-list>
-    <mat-list-item *ngFor="let i of itemsList">
+    <mat-list-item *ngFor="let i of listItems">
         <span style="font-weight: bold;">
-            {{i.id}} &nbsp; &nbsp; {{i.item_desc}} 
-        </span>
-        
-         
-            
-      
+            <!-- {{i.id}} -->
+             &nbsp; &nbsp; {{i.item_desc}} 
+        </span>   
+
             <span style="position: absolute; right: 0;">
 
-              <button mat-fab color="accent" (click)="editItem(i)">
-                <mat-icon>Edit</mat-icon>
-              </button>
-            <button mat-fab color="primary" aria-label="Example icon button with a delete icon">
-                <mat-icon>delete</mat-icon>
+              <button mat-raised-button color="accent" (click)="editListItem(i)" style="float: inline;">
+                Edit
+              </button>&nbsp; &nbsp;
+            <button mat-raised-button color="warn" (click)="deleteListItem(i)" style="float: inline;">
+                Delete
               </button>
             </span>
         

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Item } from '../../models/Item';
+import { List } from '../../models/list';
 import { DataService } from '../../services/data.service';
 import { AuthService } from '../../services/auth.service';
 
@@ -10,15 +11,21 @@ import { AuthService } from '../../services/auth.service';
 })
 export class PostsComponent implements OnInit {
   
-  itemSearch: string = '';
-  loggedId : string = '0';
-  listsList: any[];
-  itemList: Item[];
-  itemsList: any[];
-  item : string; 
-  Shopping_List: string = '';
-  Shopping_List_Id: string = '';
-  item_desc : string = '';
+  // itemSearch: string = '';
+  loggedUserId : string = '0';
+  userLists: List[];
+  listItems: Item[];
+  listName: string;
+  listRename: string;
+  selectedList: string = '';
+  selectedListId: any;
+  itemDesc: string;
+  itemDescEdit: string;
+  // itemsList: any[];
+  // item : string; 
+  // Shopping_List: string = '';
+  // Shopping_List_Id: string = '';
+  // item_desc : string = '';
 
   constructor( private dataservice : DataService,
                private authservice : AuthService
@@ -26,150 +33,118 @@ export class PostsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUserId();
-     this.refreshItemList();
-     this.refreshUserLists();
-     this.viewContents(this.Shopping_List_Id);
+    //  this.refreshItemList();
+    this.refreshUserLists();
+    //  this.viewContents(this.Shopping_List_Id);
     
   }
 
-  refreshItemList() {
-    this.dataservice.getAllItems().subscribe(data=>{
-
-      this.itemList=data;
-    });
+  getUserId() {
+    this.loggedUserId = (localStorage.getItem("userId"));
   }
 
   refreshUserLists() {
-    this.dataservice.getAllLists(localStorage.getItem("userId")).subscribe(data=>{
-      
-      this.listsList=data;
-
+    this.dataservice.fetchAllLists(localStorage.getItem("userId")).subscribe(data=>{
+      this.userLists=data;
     });
   }
 
-  editItem(i) {
-   var it = {
-    id : i.id,
-    item : this.item,
-   };
-
-  
-
-    if(confirm('Are you sure want to update?')) {
-      this.dataservice.updateItem(it).subscribe(
-        data => {
-          //console.log(res);
-          alert("Item updated");
-          this.refreshItemList();
-        })
-    
-      }
+  refreshListItems(l) {
+    this.dataservice.fetchAllItems(l.id).subscribe(data=>{
+      this.listItems=data;
+      this.selectedList = l.name;
+      this.selectedListId = l.id;
+    });
   }
 
+  addUserList() {
+    var listDetails = {
+      user_id : localStorage.getItem("userId"),
+      name : this.listName,
+      status : 1
+    }
+    this.dataservice.createList(listDetails).subscribe(res => {
+      alert("List Created!");
+      this.refreshUserLists();
+    });
+  }
 
-  removeItem(i) {
-    debugger;
-    if(confirm('Are you sure want to delete?')) {
-      this.dataservice.deleteItem(i.id).subscribe(
-        data => {
-          //console.log(res);
-          alert("Item has been removed from the List");
-          this.refreshItemList();
-        }
-      
-      )
-      
+  renameList(l) {
+    var list = {
+      id : l.id,
+      user_id : l.user_id,
+      name : this.listRename,
+      status : 1
     }
 
-  }
-
-  createItem() {
-    var it = {
-      item : this.item,
-     };
-
-   
-
-    this.dataservice.addItem(it).subscribe(res=>{
-      
-      //console.log(res);
-      
-      alert("Item added to the List");
-      this.refreshItemList();
-      });
-    
-
-    
-  }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  getUserId() {
-    this.loggedId = (localStorage.getItem("userId"));
-  }
-  
-
-  viewContents(id) {
-
-    this.dataservice.getListItems(id).subscribe(data => {
-      this.itemsList = data;
-  
+    this.dataservice.editList(list).subscribe(res => {
+      alert("List Renamed!");
+      this.refreshUserLists();
+      this.dataservice.fetchAllItems(l.id).subscribe(data=> {
+          this.listItems = data;
+          this.selectedList = this.listRename;
+          this.selectedListId = l.id;
+      }); 
     });
-
-  }
-
-  setCurrentList(l) {
-  
-    this.Shopping_List = l.name;
-      this.Shopping_List_Id = l.id;
-      
     
-
   }
 
-   addItem() {
+
+
+
+  deleteList(l) {
+    var list = {
+      id : l.id,
+      user_id : l.user_id,
+      name : l.name,
+      status : 0
+    }
+
+    this.dataservice.editList(list).subscribe(res => {
+      alert("List Deleted!");
+      this.refreshUserLists();
+    });
+    
+  }
+
+
+  addListItem() {
     var item = {
-      list_id : this.Shopping_List_Id,
-      item_desc : this.item_desc,
-     };
+      list_id : this.selectedListId,
+      item_desc : this.itemDesc,
+    }
+    this.dataservice.createItem(item).subscribe(res => {
+      alert("Item Created & Added!");
 
-   
-
-    this.dataservice.createItem(item).subscribe(res=>{
-      
-      //console.log(res);
-      
-      alert("Item added to the List");
-      this.refreshItemList();
+      this.dataservice.fetchAllItems(this.selectedListId).subscribe(data => {
+         this.listItems = data;    
       });
-    
-
-    
+    });
   }
 
-  updateItem(i) {
+  deleteListItem(i) {
+    this.dataservice.deleteItem(i.id).subscribe(res=> {
+      alert("Item Deleted!");
+
+      this.dataservice.fetchAllItems(i.list_id).subscribe(data=> {
+         this.listItems = data;
+      });
+    });
+  }
+
+  editListItem(i) {
     var item = {
-       id : i.id,
+      id : i.id,
       list_id : i.list_id,
-      item_desc : i.item_desc,
-     };
+      item_desc : this.itemDescEdit,
+    };
+    this.dataservice.editItem(item).subscribe(res=> {
+      alert("Item Updated!");
 
-   
-
-    this.dataservice.changeItem(item).subscribe(res=>{
-      
-      //console.log(res);
-      
-      alert("Item added to the List");
-      this.viewContents(i.list_id);
+      this.dataservice.fetchAllItems(i.list_id).subscribe(data=> {
+         this.listItems = data;
       });
-    
-
-    
+    });
   }
-
-
-  
-
-
-
 
 }
