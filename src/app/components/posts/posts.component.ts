@@ -13,7 +13,7 @@ export class PostsComponent implements OnInit {
   
   // itemSearch: string = '';
   loggedUserId : string = '0';
-  userLists: List[];
+  userLists: any[];
   listItems: Item[];
   listName: string;
   listRename: string;
@@ -21,6 +21,7 @@ export class PostsComponent implements OnInit {
   selectedListId: any;
   itemDesc: string;
   itemDescEdit: string;
+  username: string;
   // itemsList: any[];
   // item : string; 
   // Shopping_List: string = '';
@@ -40,12 +41,16 @@ export class PostsComponent implements OnInit {
   }
 
   getUserId() {
+    debugger;
     this.loggedUserId = (localStorage.getItem("userId"));
   }
 
   refreshUserLists() {
+    debugger;
     this.dataservice.fetchAllLists(localStorage.getItem("userId")).subscribe(data=>{
-      this.userLists=data;
+      this.userLists=data["lists"];
+      this.username=data["username"];
+      debugger;
     });
   }
 
@@ -59,11 +64,10 @@ export class PostsComponent implements OnInit {
 
   addUserList() {
     var listDetails = {
-      user_id : localStorage.getItem("userId"),
       name : this.listName,
       status : 1
-    }
-    this.dataservice.createList(listDetails).subscribe(res => {
+    };
+    this.dataservice.createList(localStorage.getItem("userId") , listDetails ).subscribe(res => {
       alert("List Created!");
       this.refreshUserLists();
     });
@@ -71,20 +75,19 @@ export class PostsComponent implements OnInit {
 
   renameList(l) {
     var list = {
-      id : l.id,
-      user_id : l.user_id,
-      name : this.listRename,
-      status : 1
-    }
+      username : this.username,
+      old : l.name,
+      new : this.listRename
+    };
 
     this.dataservice.editList(list).subscribe(res => {
       alert("List Renamed!");
-      this.refreshUserLists();
-      this.dataservice.fetchAllItems(l.id).subscribe(data=> {
-          this.listItems = data;
-          this.selectedList = this.listRename;
-          this.selectedListId = l.id;
-      }); 
+     this.refreshUserLists();
+      // this.dataservice.fetchAllItems(l.id).subscribe(data=> {
+      //     this.listItems = data;
+      //     this.selectedList = this.listRename;
+      //     this.selectedListId = l.id;
+      // }); 
     });
     
   }
@@ -94,17 +97,15 @@ export class PostsComponent implements OnInit {
 
   deleteList(l) {
     var list = {
-      id : l.id,
-      user_id : l.user_id,
       name : l.name,
-      status : 0
+      status : 1
     }
-
-    this.dataservice.editList(list).subscribe(res => {
+         debugger;
+    this.dataservice.removeList(localStorage.getItem("userId") ,list).subscribe(res => {
       alert("List Deleted!");
       this.refreshUserLists();
     });
-    
+    debugger;
   }
 
 

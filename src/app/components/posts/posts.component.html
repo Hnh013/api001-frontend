@@ -49,9 +49,50 @@
    
 </mat-card>
 -->
+<!-- 
+<mat-accordian>
 
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      This is expansion title
+    </mat-panel-title>
+    <mat-panel-description>
+      This is summary of content
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <p>This is primary content</p>
+</mat-expansion-panel>
 
-<mat-card style="width: 60%; float: left;">
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      This is expansion title
+    </mat-panel-title>
+    <mat-panel-description>
+      This is summary of content
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <p>This is primary content</p>
+</mat-expansion-panel>
+
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      This is expansion title
+    </mat-panel-title>
+    <mat-panel-description>
+      This is summary of content
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <p>This is primary content</p>
+</mat-expansion-panel>
+
+</mat-accordian>
+<br><br><br>
+<hr><hr> -->
+
+<mat-card style="width: 90%; float: left;">
 
   <button 
   mat-fab color="primary" style="float: right;" (click)="addUserList()">
@@ -73,6 +114,9 @@
         <mat-label>Write New Name of List Here , then click on 'Rename'</mat-label>
         <input [(ngModel)]="listRename" matInput placeholder="Ex. MyListOne" style="float: left;" /> 
         </mat-form-field>
+
+
+      
    
     
         
@@ -82,15 +126,92 @@
     </mat-label>
 
 
-    <mat-list-item *ngFor="let l of userLists">
+    <!-- <mat-list-item *ngFor="let l of userLists"> -->
   
         
       
         <!-- <span style="font-weight: bold;">{{l.user_id}}</span> -->
         <div class="list-info" style="float: left;">  
-        <span style="font-weight: bold;">
-          {{l.name}}
+          <mat-accordian>
+          <mat-expansion-panel *ngFor="let l of userLists">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <span style="font-weight: bold; float: left;">
+                  {{l.name}} 
+                </span>
+              </mat-panel-title>
+              <mat-panel-description>
+                <span style="position: absolute; right: 0; margin-right: 50px; float: inline-start;">
+        
+            &nbsp;
+            <button mat-raised-button color="primary" style="float: inline-start;" (click)="renameList(l)">Rename </button> 
+           &nbsp;
+            <!-- <button mat-raised-button color="accent" (click)="refreshListItems(l)" >View</button>
+           &nbsp; -->
+            <!-- <button mat-raised-button color="primary">Edit</button>
+            &nbsp;  -->
+            <button mat-raised-button color="warn" (click)="deleteList(l)" >Delete</button> 
         </span>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            
+
+
+
+            <button mat-fab color="primary" style="float: left;">
+           <mat-icon>add</mat-icon>
+           </button>
+                &nbsp; &nbsp;&nbsp;
+           <mat-form-field style="width: 52%;">
+            <mat-label>&nbsp; &nbsp; &nbsp; Add An Item Here</mat-label>
+            <input [(ngModel)]="itemDesc" matInput placeholder="Ex. Bread" />
+            </mat-form-field>
+        
+            <mat-form-field style="width: 60%;">
+              <mat-label>Write Edited Description Here , then click on 'Edit'</mat-label>
+              <input [(ngModel)]="itemDescEdit" matInput placeholder="Ex. Something" style="float: left;" /> 
+              </mat-form-field>
+        
+           
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              <mat-list-item *ngFor="let i of l.items">
+                  <span style="font-weight: bold;">
+                       
+                       &nbsp; &nbsp; {{i.item_desc}} 
+                  </span>   
+          
+                      <span style="position: absolute; right: 0; float: left;">
+          
+                        <button mat-raised-button color="accent" (click)="editListItem(i)" style="float: inline;">
+                          Edit
+                        </button>&nbsp; &nbsp;
+                      <button mat-raised-button color="warn" (click)="deleteListItem(i)" style="float: inline;">
+                          Delete
+                        </button>
+                      </span>
+              </mat-list-item>
+          </mat-expansion-panel>
+          </mat-accordian>
         </div>
       
         <!-- <span style="font-weight: bold;">{{l.updated_date}}</span> --->
@@ -98,26 +219,16 @@
             <span style="font-weight: bold;">{{l.status}}</span> 
         </div> -->
        
-        <span style="position: absolute; right: 0;">
-         
-            &nbsp;
-            <button mat-raised-button color="primary" style="float: inline-start;" (click)="renameList(l)">Rename </button> 
-           &nbsp;
-            <button mat-raised-button color="accent" (click)="refreshListItems(l)" >View</button>
-           &nbsp;
-            <!-- <button mat-raised-button color="primary">Edit</button>
-            &nbsp; &nbsp; -->
-            <button mat-raised-button color="warn" (click)="deleteList(l)" >Delete</button>
-        </span>
+        
       
        
-    </mat-list-item>
+    <!-- </mat-list-item> --->
 </mat-list>
 </mat-card>
 
+<!-- 
 
-
-<mat-card style="width: 30%; float: right;">
+<!-- <mat-card style="width: 30%; float: right;">
     <h1 style="text-align: center; font-size: 28px; font-weight: bold; margin-top: 30px;">
     {{ selectedList }}
     <input value="{{selectedListId}}" type="hidden"/>
@@ -151,11 +262,11 @@
         </mat-form-field> -->
 
     
-    
+<!--     
     <mat-list>
     <mat-list-item *ngFor="let i of listItems">
         <span style="font-weight: bold;">
-            <!-- {{i.id}} -->
+            {{i.id}} 
              &nbsp; &nbsp; {{i.item_desc}} 
         </span>   
 
@@ -172,5 +283,5 @@
     </mat-list-item>
     
     </mat-list>
-</mat-card>
-
+</mat-card> -->
+ 

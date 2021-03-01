@@ -17,16 +17,24 @@ export class DataService {
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////// MANIPULATING LISTS //////////////////////////////////////////////
   
-  fetchAllLists(user_id : any):Observable<List[]> {
-    return this.http.get<List[]>(this.APIurl + '/list/al/' + user_id);
+  fetchAllLists(user_id : any):Observable<any> {
+    debugger;
+    return this.http.get<any>(this.APIurl + '/list/fetch/' + user_id);
+    debugger;
   }
   
-  createList(list : any) {
-    return this.http.post<any>(this.APIurl + '/list/', list);
+  createList(id: any, list : object) {
+    return this.http.post<any>(this.APIurl + '/list/add/' + id, list);
   }
    
   editList(list : any) : Observable<List> { 
-    return this.http.put<any>(this.APIurl + '/list/', list);
+    return this.http.put<any>(this.APIurl + '/list/edit', list);
+  }
+
+  removeList(id : any, list: object) : Observable<any>{ 
+    debugger;
+    return this.http.post<any>(this.APIurl + '/list/remove/' + id, list);
+    debugger;
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////

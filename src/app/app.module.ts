@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { FormsModule } from '@angular/forms';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -47,7 +48,8 @@ import { FilterPipe } from './pipes/filter.pipe';
     MatToolbarModule,
     ReactiveFormsModule,
     HttpClientModule ,
-    FormsModule
+    FormsModule,
+    MatExpansionModule
   ],
   providers: [],
   bootstrap: [AppComponent]

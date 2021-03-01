@@ -14,8 +14,9 @@ export class AuthService {
   private url = "http://localhost:3000/auth";
 
   isUserLoggedIn$ = new BehaviorSubject<boolean>(false);
+  userId : string = '';
   //works like a global variable so that componenets get the value ,  emits only the latest value applied to it
-  userId: Pick<User, "id">;
+  //userId: Pick<User, "id">;
   // Pick ususally picks a property or specific key from the object or model , as here it it is picking id key gfrom the user model
 
   
@@ -31,31 +32,22 @@ export class AuthService {
                private router : Router
     ) { }
 
-  signup(user: Omit<User, "id">): Observable<User> {
-
-   
-    return this.http.post<User>(`${this.url}/signup`, user, this.httpOptions).pipe(
+  signup(user : Omit<User, "_id">): Observable<any> {
+    return this.http.post<any>(`${this.url}/signup`, user , this.httpOptions).pipe(
     first(),
-    catchError(this.errorHandlerService.handleError<User>("signup"))     
+    catchError(this.errorHandlerService.handleError<any>("signup"))     
       )
-
-   // omit aas the data we send it not oging to have any sort of id initially
-    // seems unnnecessary after working on the grocery part 
-    // Observable captures the reponse of a predefined type best suited for GET requests 
-
   };
 
-   login( email: Pick<User, "email">,  password: Pick<User, "password"> ): Observable<{
-    token: string;userId: Pick<User, "id">;}>
+   login(email: string,password: string): Observable<any>
     {
-    return this.http
-      .post(`${this.url}/login`, { email, password }, this.httpOptions)
+    return this.http.post(`${this.url}/login`, { email, password }, this.httpOptions)
       .pipe(
         first(), // get only the first result
-        tap((tokenObject: { token: string; userId: Pick<User, "id"> }) => {
-          this.userId = tokenObject.userId;
-          localStorage.setItem("token", tokenObject.token);
-          localStorage.setItem("userId", (tokenObject.userId).toString());
+        tap((tokenObject: {data: string; id: string }) => {
+          this.userId = tokenObject.id;
+          localStorage.setItem("token", tokenObject.data);
+          localStorage.setItem("userId", (tokenObject.id).toString());
           console.log(localStorage.getItem("token"));
           console.log(localStorage.getItem("userId"));
           this.isUserLoggedIn$.next(true);
@@ -67,7 +59,7 @@ export class AuthService {
           
           this.errorHandlerService.handleError<{
             token: string;
-            userId: Pick<User, "id">;
+            userId: string;
           }>("login")
         )
       );
